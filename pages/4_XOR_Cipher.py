@@ -19,9 +19,7 @@ def xor_encrypt(plaintext, key):
         st.write(f"Key byte:       {key[i % len(key)]:08b} = {chr(key[i % len(key)])}")
         st.write(f"XOR result:     {ciphertext[-1]:08b} = {chr(ciphertext[-1])}")
         st.write("--------------------")
-    return ciphertext
-        
-        
+    return ciphertext  
 
 def xor_decrypt(ciphertext, key):
     """Decrypts ciphertext using XOR cipher with the given key."""
@@ -42,6 +40,6 @@ if st.button("Submit"):
             decryption = xor_decrypt(cipher_text, key)
             st.write("Decrypted:",decryption.decode())
     st.balloons()
-    
+
 
 
