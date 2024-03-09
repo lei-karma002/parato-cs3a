@@ -21,6 +21,12 @@ def xor_encrypt_block(plaintext_block, key):
 def xor_decrypt_block(ciphertext_block, key):
     return xor_encrypt_block(ciphertext_block, key)  
 
+def xor_encrypt_and_decrypt(plaintext, key, block_size):
+    key_bytes = pad(bytes(key.encode()), block_size)
+    ciphertext = xor_encrypt(plaintext.encode(), key_bytes, block_size)
+    decrypted_data = xor_decrypt(ciphertext, key_bytes, block_size)
+    return ciphertext, decrypted_data, key_bytes
+
 def xor_encrypt(plaintext, key, block_size):
     encrypted_data = b''
     padded_plaintext = pad(plaintext, block_size)
@@ -53,25 +59,29 @@ def main():
         else:
             st.warning("Block size must be one of 8, 16, 32, 64, or 128 bytes")
 
-    # Store ciphertext in session state
-    ciphertext = st.session_state.get('ciphertext', None)
+    ciphertext, decrypted_data, key_bytes = xor_encrypt_and_decrypt(plaintext, key, block_size)
 
-    if st.button("Encrypt"):
-        ciphertext = xor_encrypt(bytes(plaintext.encode()), bytes(key.encode()), block_size)
-        st.session_state['ciphertext'] = ciphertext
-        st.write("Encrypted data:", ciphertext.hex())
+    if st.button("Encrypt / Decrypt"):
+        st.write("\nEncrypted blocks")
+        for l, i in enumerate(range(0, len(ciphertext), block_size)):
+            ciphertext_block = ciphertext[i:i+block_size]
+            st.write(f"Plain  block[{l}]: {to_hex_string(plaintext[i:i+block_size].encode())} : {plaintext[i:i+block_size]}")
+            st.write(f"Cipher block[{l}]: {ciphertext_block.hex()} : {ciphertext_block}")
 
-    if st.button("Decrypt") and ciphertext:
-        decrypted_data = xor_decrypt(bytes.fromhex(ciphertext.hex()), bytes(key.encode()), block_size)
-        st.write("Decrypted data:", decrypted_data.decode())
+        st.write("\nDecrypted blocks")
+        for l, i in enumerate(range(0, len(decrypted_data), block_size)):
+            decrypted_block = decrypted_data[i:i+block_size]
+            st.write(f"block[{l}]: {to_hex_string(decrypted_block)}: {decrypted_block}")
 
-    if ciphertext:
         st.write("\nOriginal plaintext:", plaintext)
-        st.write("Key byte      :", key.encode())
-        st.write("Key hex       :", key.encode().hex())
+        st.write("Key byte      :", key_bytes)
+        st.write("Key hex       :", key_bytes.hex())
         st.write("Encrypted data:", ciphertext.hex())  
-        st.write("Decrypted data:", decrypted_data.hex() if 'decrypted_data' in locals() else '')
-        st.write("Decrypted data:", decrypted_data.decode() if 'decrypted_data' in locals() else '')
+        st.write("Decrypted data:", decrypted_data.hex())
+        st.write("Decrypted data:", decrypted_data)
+
+def to_hex_string(data):
+    return ':'.join('{:02x}'.format(byte) for byte in data)
 
 if __name__ == "__main__":
     main()
