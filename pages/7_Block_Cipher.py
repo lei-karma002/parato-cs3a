@@ -9,7 +9,7 @@ def unpad(data):
     padding_length = data[-1]                                
     assert padding_length > 0
     message, padding = data[:-padding_length], data[-padding_length:]
-    assert all(p == padding_length for p in padding)
+    assert all(p == padding_length for p  in padding)
     return message                       
 
 def xor_encrypt_block(plaintext_block, key):
@@ -53,21 +53,15 @@ def main():
         else:
             st.write("Block size must be one of 8, 16, 32, 64, or 128 bytes")
 
-    if st.button("Encrypt"):
-        key = pad(bytes(key.encode()), block_size)
-        ciphertext = xor_encrypt(bytes(plaintext.encode()), key, block_size)
-        st.write("Encrypted data:", ciphertext.hex())
+    ciphertext = xor_encrypt(plaintext, key, block_size)
+    decrypted_data = xor_decrypt(ciphertext, key, block_size)
 
-    if st.button("Decrypt"):
-        decrypted_data = xor_decrypt(bytes.fromhex(ciphertext.hex()), key, block_size)
-        st.write("Decrypted data:", decrypted_data.decode())
-
-        st.write("\nOriginal plaintext:", plaintext)
-        st.write("Key byte      :", key)
-        st.write("Key hex       :", key.hex())
-        st.write("Encrypted data:", ciphertext.hex())  
-        st.write("Decrypted data:", decrypted_data.hex())
-        st.write("Decrypted data:", decrypted_data.decode())
+    st.write("\nOriginal plaintext:", plaintext)
+    st.write("Key byte      :", key)
+    st.write("Key hex       :", key.hex())
+    st.write("Encrypted data:", ciphertext.hex())  
+    st.write("Decrypted data:", decrypted_data.hex())
+    st.write("Decrypted data:", decrypted_data)
 
 if __name__ == "__main__":
     main()
