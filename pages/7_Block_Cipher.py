@@ -47,21 +47,31 @@ def main():
     key = st.text_input("Enter key: ")
     
     while True:
-        block_size = st.number_input("Enter block size: ")
+        block_size = st.number_input("Enter block size: ", value=8, step=8, min_value=8, max_value=128)
         if block_size in allowed_block_sizes:
             break
         else:
-            st.write("Block size must be one of 8, 16, 32, 64, or 128 bytes")
+            st.warning("Block size must be one of 8, 16, 32, 64, or 128 bytes")
 
-    ciphertext = xor_encrypt(plaintext, key, block_size)
-    decrypted_data = xor_decrypt(ciphertext, key, block_size)
+    # Store ciphertext in session state
+    ciphertext = st.session_state.get('ciphertext', None)
 
-    st.write("\nOriginal plaintext:", plaintext)
-    st.write("Key byte      :", key)
-    st.write("Key hex       :", key.hex())
-    st.write("Encrypted data:", ciphertext.hex())  
-    st.write("Decrypted data:", decrypted_data.hex())
-    st.write("Decrypted data:", decrypted_data)
+    if st.button("Encrypt"):
+        ciphertext = xor_encrypt(bytes(plaintext.encode()), bytes(key.encode()), block_size)
+        st.session_state['ciphertext'] = ciphertext
+        st.write("Encrypted data:", ciphertext.hex())
+
+    if st.button("Decrypt") and ciphertext:
+        decrypted_data = xor_decrypt(bytes.fromhex(ciphertext.hex()), bytes(key.encode()), block_size)
+        st.write("Decrypted data:", decrypted_data.decode())
+
+    if ciphertext:
+        st.write("\nOriginal plaintext:", plaintext)
+        st.write("Key byte      :", key.encode())
+        st.write("Key hex       :", key.encode().hex())
+        st.write("Encrypted data:", ciphertext.hex())  
+        st.write("Decrypted data:", decrypted_data.hex() if 'decrypted_data' in locals() else '')
+        st.write("Decrypted data:", decrypted_data.decode() if 'decrypted_data' in locals() else '')
 
 if __name__ == "__main__":
     main()
