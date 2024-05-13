@@ -42,7 +42,7 @@ def main():
                 hash_value = hash_data(file_contents, algorithm)
                 st.write(f"{algorithm} hash:", hash_value)
                 download_button = download_file(hash_value, "hashed_file.txt")
-                st.success("File downloaded successfully!")
+                st.success("File hashed successfully!")
 
 if __name__ == "__main__":
     main()
