@@ -32,6 +32,7 @@ def main():
         if st.button("Hash"):
             hash_value = hash_data(text, algorithm)
             st.write(f"{algorithm} hash:", hash_value)
+            st.success("Text hashed successfully!")
 
     elif input_type == "File":
         file = st.file_uploader("Upload file:")
