@@ -1,5 +1,6 @@
 import streamlit as st
 import hashlib
+from io import BytesIO
 
 def hash_data(data, algorithm):
     if algorithm == "SHA-1":
@@ -12,8 +13,13 @@ def hash_data(data, algorithm):
         hash_value = hashlib.md5(data.encode()).hexdigest().upper()
     else:
         return "Invalid algorithm"
-
     return hash_value
+
+def download_file(data, filename):
+    buffer = BytesIO()
+    buffer.write(data.encode())
+    buffer.seek(0)
+    return st.download_button(label="Download", data=buffer, file_name=filename, mime="text/plain")
 
 def main():
     st.title("Hashing")
@@ -35,6 +41,9 @@ def main():
             if st.button("Hash"):
                 hash_value = hash_data(file_contents, algorithm)
                 st.write(f"{algorithm} hash:", hash_value)
+                download_button = download_file(hash_value, "hashed_file.txt")
+                if download_button:
+                    st.success("File downloaded successfully!")
 
-if __name__ == "_main_":
+if __name__ == "__main__":
     main()
