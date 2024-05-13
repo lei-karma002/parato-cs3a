@@ -2,10 +2,6 @@ import streamlit as st
 import hashlib
 from io import BytesIO
 
-class SessionState:
-    def __init__(self, **kwargs):
-        self.__dict__.update(kwargs)
-
 def hash_data(data, algorithm):
     if algorithm == "SHA-1":
         hash_value = hashlib.sha1(data.encode()).hexdigest().upper()
@@ -27,7 +23,6 @@ def download_file(data, filename):
 
 def main():
     st.title("Hashing")
-    session_state = SessionState(download_clicked=False)
 
     input_type = st.radio("Select input type:", ("Text", "File"))
 
@@ -46,11 +41,8 @@ def main():
             if st.button("Hash"):
                 hash_value = hash_data(file_contents, algorithm)
                 st.write(f"{algorithm} hash:", hash_value)
-                if not session_state.download_clicked:
-                    download_button = download_file(hash_value, "hashed_file.txt")
-                    if download_button:
-                        session_state.download_clicked = True
-                        st.success("File downloaded successfully!")
+                download_button = download_file(hash_value, "hashed_file.txt")
+                st.success("File downloaded successfully!")
 
 if __name__ == "__main__":
     main()
