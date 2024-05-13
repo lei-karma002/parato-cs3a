@@ -45,4 +45,4 @@ def main():
                 st.success("File hashed successfully!")
 
 if __name__ == "__main__":
-    main()
+    main() 
