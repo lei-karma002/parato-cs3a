@@ -53,17 +53,17 @@ def main():
                 if download_button:
                     st.success("File downloaded successfully!")
 
-                # Upload and unhash functionality
-                st.header("Upload and Unhash")
-                uploaded_file = st.file_uploader("Upload hashed file to unhash:")
-                if uploaded_file is not None:
-                    uploaded_file_contents = uploaded_file.getvalue().decode("utf-8")
-                    if st.button("Unhash"):
-                        unhashed_value = unhash_data(uploaded_file_contents, algorithm)
-                        st.write(f"Unhashed {algorithm} value:", unhashed_value)
-                        download_unhashed_button = download_file(unhashed_value, "unhashed_file.txt")
-                        if download_unhashed_button:
-                            st.success("Unhashed file downloaded successfully!")
+            # Unhashing functionality
+            st.header("Unhashing")
+            uploaded_file = st.file_uploader("Upload hashed file to unhash:")
+            if uploaded_file is not None:
+                uploaded_file_contents = uploaded_file.getvalue().decode("utf-8")
+                if st.button("Unhash"):
+                    unhashed_value = unhash_data(uploaded_file_contents, algorithm)
+                    st.write(f"Unhashed {algorithm} value:", unhashed_value)
+                    download_unhashed_button = download_file(unhashed_value, "unhashed_file.txt")
+                    if download_unhashed_button:
+                        st.success("Unhashed file downloaded successfully!")
 
 if __name__ == "__main__":
     main()
