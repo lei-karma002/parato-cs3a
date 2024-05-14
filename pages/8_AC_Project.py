@@ -52,7 +52,14 @@ def main():
         if st.button("Hash"):
             hash_value = hash_data(text, algorithm)
             st.write(f"{algorithm} hash:", hash_value)
-            st.success("Text hashed successfully!")
+            if algorithm == "SHA-1":
+                st.success("Text hashed with SHA-1 successfully!")
+            elif algorithm == "SHA-256":
+                st.success("Text hashed with SHA-256 successfully!")
+            elif algorithm == "SHA-3":
+                st.success("Text hashed with SHA-3 successfully!")
+            elif algorithm == "SHA-1":
+                st.success("Text hashed with MD5 successfully!")
 
     elif input_type == "File":
         file = st.file_uploader("Upload file:")
@@ -63,8 +70,15 @@ def main():
             if st.button("Hash"):
                 hash_value = hash_data(file_contents, algorithm)
                 st.write(f"{algorithm} hash:", hash_value)
-                st.success("File hashed successfully!")
-                
+                if algorithm == "SHA-1":
+                    st.success("File hashed with SHA-1 successfully!")
+                elif algorithm == "SHA-256":
+                    st.success("File hashed with SHA-256 successfully!")
+                elif algorithm == "SHA-3":
+                    st.success("File hashed with SHA-3 successfully!")
+                elif algorithm == "SHA-1":
+                    st.success("File hashed with MD5 successfully!")
+
     st.header("Encryption")
 
     encryption_option = st.radio("Select encryption method:", ("RSA", "Fernet"))
