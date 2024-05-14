@@ -70,14 +70,7 @@ def main():
             if st.button("Hash"):
                 hash_value = hash_data(file_contents, algorithm)
                 st.write(f"{algorithm} hash:", hash_value)
-                if algorithm == "SHA-1":
-                    st.success("File hashed with SHA-1 successfully!")
-                elif algorithm == "SHA-256":
-                    st.success("File hashed with SHA-256 successfully!")
-                elif algorithm == "SHA-3":
-                    st.success("File hashed with SHA-3 successfully!")
-                elif algorithm == "SHA-1":
-                    st.success("File hashed with MD5 successfully!")
+                st.success("File hashed successfully!")
 
     st.header("Encryption")
 
