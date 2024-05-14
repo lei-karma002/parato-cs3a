@@ -53,26 +53,23 @@ def main():
             st.success("Text hashed successfully!")
         
         encryption_option = st.radio("Select encryption method:", ("RSA", "Fernet"))
+        encryption_input = st.text_input("Enter data to encrypt:")
         
-        if encryption_option == "RSA":
-            public_key = rsa.generate_private_key(
-                public_exponent=65537,
-                key_size=2048,
-                backend=default_backend()
-            ).public_key()
-            
-            if st.button("Encrypt with RSA"):
-                encrypted_data = encrypt_with_rsa(public_key, hash_value)
-                st.write("Encrypted Hash (RSA):", encrypted_data.hex())
-                st.success("Hash encrypted with RSA successfully!")
-
-        elif encryption_option == "Fernet":
-            key = Fernet.generate_key()
-            
-            if st.button("Encrypt with Fernet"):
-                encrypted_data = encrypt_with_fernet(key, hash_value)
-                st.write("Encrypted Hash (Fernet):", encrypted_data.decode())
-                st.success("Hash encrypted with Fernet successfully!")
+        if st.button("Encrypt"):
+            if encryption_option == "RSA":
+                public_key = rsa.generate_private_key(
+                    public_exponent=65537,
+                    key_size=2048,
+                    backend=default_backend()
+                ).public_key()
+                encrypted_data = encrypt_with_rsa(public_key, encryption_input)
+                st.write("Encrypted Data (RSA):", encrypted_data.hex())
+                st.success("Data encrypted with RSA successfully!")
+            elif encryption_option == "Fernet":
+                key = Fernet.generate_key()
+                encrypted_data = encrypt_with_fernet(key, encryption_input)
+                st.write("Encrypted Data (Fernet):", encrypted_data.decode())
+                st.success("Data encrypted with Fernet successfully!")
 
     elif input_type == "File":
         file = st.file_uploader("Upload file:")
@@ -86,26 +83,23 @@ def main():
                 st.success("File hashed successfully!")
                 
             encryption_option = st.radio("Select encryption method:", ("RSA", "Fernet"))
-
-            if encryption_option == "RSA":
-                public_key = rsa.generate_private_key(
-                    public_exponent=65537,
-                    key_size=2048,
-                    backend=default_backend()
-                ).public_key()
-                
-                if st.button("Encrypt with RSA"):
-                    encrypted_data = encrypt_with_rsa(public_key, hash_value)
-                    st.write("Encrypted Hash (RSA):", encrypted_data.hex())
-                    st.success("Hash encrypted with RSA successfully!")
-
-            elif encryption_option == "Fernet":
-                key = Fernet.generate_key()
-                
-                if st.button("Encrypt with Fernet"):
-                    encrypted_data = encrypt_with_fernet(key, hash_value)
-                    st.write("Encrypted Hash (Fernet):", encrypted_data.decode())
-                    st.success("Hash encrypted with Fernet successfully!")
+            encryption_input = st.text_input("Enter data to encrypt:")
+        
+            if st.button("Encrypt"):
+                if encryption_option == "RSA":
+                    public_key = rsa.generate_private_key(
+                        public_exponent=65537,
+                        key_size=2048,
+                        backend=default_backend()
+                    ).public_key()
+                    encrypted_data = encrypt_with_rsa(public_key, encryption_input)
+                    st.write("Encrypted Data (RSA):", encrypted_data.hex())
+                    st.success("Data encrypted with RSA successfully!")
+                elif encryption_option == "Fernet":
+                    key = Fernet.generate_key()
+                    encrypted_data = encrypt_with_fernet(key, encryption_input)
+                    st.write("Encrypted Data (Fernet):", encrypted_data.decode())
+                    st.success("Data encrypted with Fernet successfully!")
 
 if __name__ == "__main__":
     main()
