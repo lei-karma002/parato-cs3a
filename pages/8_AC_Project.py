@@ -84,9 +84,6 @@ def xor_decrypt(ciphertext, key, block_size):
     return unpadded_decrypted_data                               
 
 def main():
-    st.header("We are the Group 8")
-
-def main():
     
     st.title("APPLIED CRYPTOGRAPHY") #TITLE
 
@@ -165,6 +162,8 @@ def main():
             st.write("Encrypted Data (XOR Cipher):", ciphertext.hex())
             st.write("Decrypted Data (XOR Cipher):", decrypted_data.decode())
             st.success("Data encrypted and decrypted with XOR Cipher successfully!")
+
+    st.markdown("![Alt Text](https://tenor.com/view/shaq-shimmy-gif-6579961127426913411.gif)")
 
 st.markdown("![Alt Text](https://tenor.com/view/hi-gif-14667427173248443855.gif)")
 
