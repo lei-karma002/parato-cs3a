@@ -130,15 +130,15 @@ def main():
                 
     st.header("Encryption")
 
-    encryption_option = st.radio("Select encryption method:", ("RSA", "Fernet", "XOR"))
+    encryption_option = st.radio("Select encryption method:", ("RSA", "Fernet", "XOR Cipher"))
 
     if encryption_option == "RSA":
         encryption_input = st.text_input("Enter data to encrypt (RSA):")
     elif encryption_option == "Fernet":
         encryption_input = st.text_input("Enter data to encrypt (Fernet):")
-    elif encryption_option == "XOR":
-        encryption_input = st.text_input("Enter data to encrypt (XOR):")
-        key = st.text_input("Enter XOR key:")
+    elif encryption_option == "XOR Cipher":
+        encryption_input = st.text_input("Enter data to encrypt (XOR Cipher):")
+        key = st.text_input("Enter XOR Cipher key:")
         block_size = st.number_input("Enter block size:", value=8, step=8, min_value=8, max_value=128)
         ciphertext, decrypted_data, key_bytes = xor_encrypt_and_decrypt(encryption_input, key, block_size)
 
@@ -157,9 +157,9 @@ def main():
             encrypted_data = encrypt_with_fernet(key, encryption_input)
             st.write("Encrypted Data (Fernet):", encrypted_data.decode())
             st.success("Data encrypted with Fernet successfully!")
-        elif encryption_option == "XOR":
-            st.write("Encrypted Data (XOR):", ciphertext.hex())
-            st.write("Decrypted Data (XOR):", decrypted_data.decode())
+        elif encryption_option == "XOR Cipher":
+            st.write("Encrypted Data (XOR Cipher):", ciphertext.hex())
+            st.write("Decrypted Data (XOR Cipher):", decrypted_data.decode())
             st.success("Data encrypted and decrypted with XOR successfully!")
 
 if __name__ == "__main__":
