@@ -1,12 +1,12 @@
 import streamlit as st
 import hashlib
+from io import BytesIO
 from cryptography.hazmat.backends import default_backend
 from cryptography.hazmat.primitives import hashes
 from cryptography.hazmat.primitives.asymmetric import padding
 from cryptography.hazmat.primitives import serialization
 from cryptography.hazmat.primitives.asymmetric import rsa
 from cryptography.fernet import Fernet
-from cryptography.hazmat.primitives.ciphers import Cipher, algorithms, modes
 import os
 
 def hash_data(data, algorithm):
@@ -38,45 +38,6 @@ def encrypt_with_fernet(key, data):
     encrypted_data = f.encrypt(data.encode())
     return encrypted_data
 
-def encrypt_block_cipher(key, plaintext, block_size):
-    backend = default_backend()
-    cipher = Cipher(algorithms.AES(key), modes.ECB(), backend=backend)
-    encryptor = cipher.encryptor()
-    ciphertext = b''
-    for i in range(0, len(plaintext), block_size):
-        block = plaintext[i:i + block_size]
-        padded_block = block + (block_size - len(block)) * b'\x00'
-        ciphertext += encryptor.update(padded_block)
-    ciphertext += encryptor.finalize()
-    return ciphertext
-
-def decrypt_block_cipher(key, ciphertext):
-    backend = default_backend()
-    cipher = Cipher(algorithms.AES(key), modes.ECB(), backend=backend)
-    decryptor = cipher.decryptor()
-    plaintext = decryptor.update(ciphertext) + decryptor.finalize()
-    return plaintext
-
-def caesar_cipher(text, shift):
-    result = ""
-    for char in text:
-        if char.isalpha():
-            shifted = ord(char) + shift
-            if char.islower():
-                if shifted > ord('z'):
-                    shifted -= 26
-                elif shifted < ord('a'):
-                    shifted += 26
-            elif char.isupper():
-                if shifted > ord('Z'):
-                    shifted -= 26
-                elif shifted < ord('A'):
-                    shifted += 26
-            result += chr(shifted)
-        else:
-            result += char
-    return result
-
 def main():
     st.title("APPLIED CRYPTOGRAPHY")
 
@@ -106,11 +67,11 @@ def main():
                 
     st.header("Encryption")
 
-    encryption_option = st.radio("Select encryption method:", ("RSA", "Fernet", "AES (Block Cipher)", "Caesar Cipher"))
+    encryption_option = st.radio("Select encryption method:", ("RSA", "Fernet"))
     encryption_input = st.text_input("Enter data to encrypt:")
 
-    if encryption_option == "RSA":
-        if encryption_input:
+    if st.button("Encrypt"):
+        if encryption_option == "RSA":
             public_key = rsa.generate_private_key(
                 public_exponent=65537,
                 key_size=2048,
@@ -118,40 +79,12 @@ def main():
             ).public_key()
             encrypted_data = encrypt_with_rsa(public_key, encryption_input)
             st.write("Encrypted Data (RSA):", encrypted_data.hex())
-        else:
-            st.warning("Please provide data to encrypt.")
-
-    elif encryption_option == "Fernet":
-        key = Fernet.generate_key()
-        if encryption_input:
+            st.success("Data encrypted with RSA successfully!")
+        elif encryption_option == "Fernet":
+            key = Fernet.generate_key()
             encrypted_data = encrypt_with_fernet(key, encryption_input)
             st.write("Encrypted Data (Fernet):", encrypted_data.decode())
-        else:
-            st.warning("Please provide data to encrypt.")
-
-    elif encryption_option == "AES (Block Cipher)":
-        aes_key = st.text_input("Enter AES key (16, 24, or 32 bytes):")
-        plaintext_input = st.text_input("Enter plaintext to encrypt:")
-        block_size = st.number_input("Enter block size:", min_value=1, value=16, step=1)
-
-        if aes_key and plaintext_input:
-            if st.button("Encrypt (AES)"):
-                if len(aes_key) not in [16, 24, 32]:
-                    st.error("AES key must be 16, 24, or 32 bytes.")
-                else:
-                    ciphertext_block = encrypt_block_cipher(aes_key.encode(), plaintext_input.encode(), block_size)
-                    st.write("Ciphertext (AES):", ciphertext_block.hex())
-        else:
-            st.warning("Please provide AES key and plaintext to encrypt.")
-
-    elif encryption_option == "Caesar Cipher":
-        caesar_shift = st.number_input("Enter Caesar cipher shift:", min_value=1, max_value=25, value=3)
-        if encryption_input:
-            if st.button("Encrypt (Caesar)"):
-                ciphertext_caesar = caesar_cipher(encryption_input, caesar_shift)
-                st.write("Ciphertext (Caesar):", ciphertext_caesar)
-        else:
-            st.warning("Please provide plaintext.")
+            st.success("Data encrypted with Fernet successfully!")
 
 if __name__ == "__main__":
     main()
