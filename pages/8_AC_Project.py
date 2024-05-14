@@ -7,6 +7,7 @@ from cryptography.hazmat.primitives.asymmetric import padding
 from cryptography.hazmat.primitives import serialization
 from cryptography.hazmat.primitives.asymmetric import rsa
 from cryptography.fernet import Fernet
+from cryptography.hazmat.primitives.ciphers import Cipher, algorithms, modes
 import os
 
 def hash_data(data, algorithm):
@@ -38,6 +39,40 @@ def encrypt_with_fernet(key, data):
     encrypted_data = f.encrypt(data.encode())
     return encrypted_data
 
+def encrypt_block_cipher(key, plaintext):
+    backend = default_backend()
+    cipher = Cipher(algorithms.AES(key), modes.ECB(), backend=backend)
+    encryptor = cipher.encryptor()
+    ciphertext = encryptor.update(plaintext) + encryptor.finalize()
+    return ciphertext
+
+def decrypt_block_cipher(key, ciphertext):
+    backend = default_backend()
+    cipher = Cipher(algorithms.AES(key), modes.ECB(), backend=backend)
+    decryptor = cipher.decryptor()
+    plaintext = decryptor.update(ciphertext) + decryptor.finalize()
+    return plaintext
+
+def caesar_cipher(text, shift):
+    result = ""
+    for char in text:
+        if char.isalpha():
+            shifted = ord(char) + shift
+            if char.islower():
+                if shifted > ord('z'):
+                    shifted -= 26
+                elif shifted < ord('a'):
+                    shifted += 26
+            elif char.isupper():
+                if shifted > ord('Z'):
+                    shifted -= 26
+                elif shifted < ord('A'):
+                    shifted += 26
+            result += chr(shifted)
+        else:
+            result += char
+    return result
+
 def main():
     st.title("APPLIED CRYPTOGRAPHY")
 
@@ -67,7 +102,7 @@ def main():
                 
     st.header("Encryption")
 
-    encryption_option = st.radio("Select encryption method:", ("RSA", "Fernet"))
+    encryption_option = st.radio("Select encryption method:", ("RSA", "Fernet", "AES (Block Cipher)", "Caesar Cipher"))
     encryption_input = st.text_input("Enter data to encrypt:")
 
     if st.button("Encrypt"):
@@ -85,6 +120,20 @@ def main():
             encrypted_data = encrypt_with_fernet(key, encryption_input)
             st.write("Encrypted Data (Fernet):", encrypted_data.decode())
             st.success("Data encrypted with Fernet successfully!")
+        elif encryption_option == "AES (Block Cipher)":
+            aes_key = st.text_input("Enter AES key (16, 24, or 32 bytes):")
+            if aes_key:
+                ciphertext_block = encrypt_block_cipher(aes_key.encode(), encryption_input.encode())
+                st.write("Ciphertext (AES):", ciphertext_block.hex())
+            else:
+                st.warning("Please provide AES key.")
+        elif encryption_option == "Caesar Cipher":
+            caesar_shift = st.number_input("Enter Caesar cipher shift:", min_value=1, max_value=25, value=3)
+            if encryption_input:
+                ciphertext_caesar = caesar_cipher(encryption_input, caesar_shift)
+                st.write("Ciphertext (Caesar):", ciphertext_caesar)
+            else:
+                st.warning("Please provide plaintext.")
 
 if __name__ == "__main__":
     main()
