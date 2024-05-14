@@ -1,6 +1,9 @@
 # AC 
 import streamlit as st
-from Crypto.Cipher import AES, DES, DES3
+from Crypto.Cipher import Cipher
+from Crypto.Cipher import AES
+from Crypto.Cipher import DES
+from Crypto.Cipher import DES3
 from Crypto.Util.Padding import pad, unpad
 import hashlib
 from io import BytesIO
