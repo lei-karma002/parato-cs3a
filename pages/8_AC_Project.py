@@ -38,11 +38,16 @@ def encrypt_with_fernet(key, data):
     encrypted_data = f.encrypt(data.encode())
     return encrypted_data
 
-def encrypt_block_cipher(key, plaintext):
+def encrypt_block_cipher(key, plaintext, block_size):
     backend = default_backend()
     cipher = Cipher(algorithms.AES(key), modes.ECB(), backend=backend)
     encryptor = cipher.encryptor()
-    ciphertext = encryptor.update(plaintext) + encryptor.finalize()
+    ciphertext = b''
+    for i in range(0, len(plaintext), block_size):
+        block = plaintext[i:i + block_size]
+        padded_block = block + (block_size - len(block)) * b'\x00'
+        ciphertext += encryptor.update(padded_block)
+    ciphertext += encryptor.finalize()
     return ciphertext
 
 def decrypt_block_cipher(key, ciphertext):
@@ -126,12 +131,18 @@ def main():
 
     elif encryption_option == "AES (Block Cipher)":
         aes_key = st.text_input("Enter AES key (16, 24, or 32 bytes):")
-        if encryption_input and aes_key:
+        plaintext_input = st.text_input("Enter plaintext to encrypt:")
+        block_size = st.number_input("Enter block size:", min_value=1, value=16, step=1)
+
+        if aes_key and plaintext_input:
             if st.button("Encrypt (AES)"):
-                ciphertext_block = encrypt_block_cipher(aes_key.encode(), encryption_input.encode())
-                st.write("Ciphertext (AES):", ciphertext_block.hex())
+                if len(aes_key) not in [16, 24, 32]:
+                    st.error("AES key must be 16, 24, or 32 bytes.")
+                else:
+                    ciphertext_block = encrypt_block_cipher(aes_key.encode(), plaintext_input.encode(), block_size)
+                    st.write("Ciphertext (AES):", ciphertext_block.hex())
         else:
-            st.warning("Please provide AES key and data to encrypt.")
+            st.warning("Please provide AES key and plaintext to encrypt.")
 
     elif encryption_option == "Caesar Cipher":
         caesar_shift = st.number_input("Enter Caesar cipher shift:", min_value=1, max_value=25, value=3)
