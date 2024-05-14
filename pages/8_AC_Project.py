@@ -1,6 +1,5 @@
 import streamlit as st
 import hashlib
-from io import BytesIO
 from cryptography.hazmat.backends import default_backend
 from cryptography.hazmat.primitives import hashes
 from cryptography.hazmat.primitives.asymmetric import padding
@@ -105,16 +104,8 @@ def main():
     encryption_option = st.radio("Select encryption method:", ("RSA", "Fernet", "AES (Block Cipher)", "Caesar Cipher"))
     encryption_input = st.text_input("Enter data to encrypt:")
 
-    if encryption_option == "AES (Block Cipher)":
-        aes_key = st.text_input("Enter AES key (16, 24, or 32 bytes):")
-        if encryption_input and aes_key:
-            if st.button("Encrypt (AES)"):
-                ciphertext_block = encrypt_block_cipher(aes_key.encode(), encryption_input.encode())
-                st.write("Ciphertext (AES):", ciphertext_block.hex())
-        else:
-            st.warning("Please provide AES key and data to encrypt.")
-    elif st.button("Encrypt"):
-        if encryption_option == "RSA":
+    if encryption_option == "RSA":
+        if encryption_input:
             public_key = rsa.generate_private_key(
                 public_exponent=65537,
                 key_size=2048,
@@ -122,19 +113,34 @@ def main():
             ).public_key()
             encrypted_data = encrypt_with_rsa(public_key, encryption_input)
             st.write("Encrypted Data (RSA):", encrypted_data.hex())
-            st.success("Data encrypted with RSA successfully!")
-        elif encryption_option == "Fernet":
-            key = Fernet.generate_key()
+        else:
+            st.warning("Please provide data to encrypt.")
+
+    elif encryption_option == "Fernet":
+        key = Fernet.generate_key()
+        if encryption_input:
             encrypted_data = encrypt_with_fernet(key, encryption_input)
             st.write("Encrypted Data (Fernet):", encrypted_data.decode())
-            st.success("Data encrypted with Fernet successfully!")
-        elif encryption_option == "Caesar Cipher":
-            caesar_shift = st.number_input("Enter Caesar cipher shift:", min_value=1, max_value=25, value=3)
-            if encryption_input:
+        else:
+            st.warning("Please provide data to encrypt.")
+
+    elif encryption_option == "AES (Block Cipher)":
+        aes_key = st.text_input("Enter AES key (16, 24, or 32 bytes):")
+        if encryption_input and aes_key:
+            if st.button("Encrypt (AES)"):
+                ciphertext_block = encrypt_block_cipher(aes_key.encode(), encryption_input.encode())
+                st.write("Ciphertext (AES):", ciphertext_block.hex())
+        else:
+            st.warning("Please provide AES key and data to encrypt.")
+
+    elif encryption_option == "Caesar Cipher":
+        caesar_shift = st.number_input("Enter Caesar cipher shift:", min_value=1, max_value=25, value=3)
+        if encryption_input:
+            if st.button("Encrypt (Caesar)"):
                 ciphertext_caesar = caesar_cipher(encryption_input, caesar_shift)
                 st.write("Ciphertext (Caesar):", ciphertext_caesar)
-            else:
-                st.warning("Please provide plaintext.")
+        else:
+            st.warning("Please provide plaintext.")
 
 if __name__ == "__main__":
     main()
