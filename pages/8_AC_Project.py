@@ -166,6 +166,7 @@ def main():
     st.markdown("![Alt Text](https://tenor.com/view/shaq-shimmy-gif-6579961127426913411.gif)")
 
 st.markdown("![Alt Text](https://tenor.com/view/hi-gif-14667427173248443855.gif)")
+"""### We are the Group 8"""
 
 if __name__ == "__main__":
     main()
