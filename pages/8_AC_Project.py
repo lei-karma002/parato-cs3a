@@ -84,7 +84,7 @@ def xor_decrypt(ciphertext, key, block_size):
     return unpadded_decrypted_data                               
 
 def main():
-    st.title("APPLIED CRYPTOGRAPHY")
+    st.title("APPLIED CRYPTOGRAPHY") #TITLE
 
     st.header("Hashing")
 
@@ -160,9 +160,9 @@ def main():
         elif encryption_option == "XOR Cipher":
             st.write("Encrypted Data (XOR Cipher):", ciphertext.hex())
             st.write("Decrypted Data (XOR Cipher):", decrypted_data.decode())
-            st.success("Data encrypted and decrypted with XOR successfully!")
+            st.success("Data encrypted and decrypted with XOR Cipher successfully!")
 
-    st.markdown("![Error](https://tenor.com/view/hi-gif-14667427173248443855.gif)")
+st.markdown("![Alt Text](https://tenor.com/view/hi-gif-14667427173248443855.gif)")
 
 if __name__ == "__main__":
     main()
