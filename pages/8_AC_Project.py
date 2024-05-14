@@ -217,17 +217,18 @@ def main():
         public_key, shared_secret = diffie_hellman(p, g, private_key, received_public_key)
         st.success(f"Your public key: {public_key}")
         st.success(f"Shared secret: {shared_secret}")
-        message = st.text_input("Type your message:")
-        if st.button("Send"):
-            key = shared_secret % 95
-            encrypted_message = caesar_encrypt(message, key)
-            st.success(f"You Sent: {encrypted_message}")
+        
+    message = st.text_input("Type your message:")
+    if st.button("Send"):
+        key = shared_secret % 95
+        encrypted_message = caesar_encrypt(message, key)
+        st.success(f"You Sent: {encrypted_message}")
 
-        received_message = st.text_input("Enter received message:")
-        if st.button("Receive"):
-            key = shared_secret % 95
-            decrypted_message = caesar_decrypt(received_message, key)
-            st.success(f"Received message: {decrypted_message}")
+    received_message = st.text_input("Enter received message:")
+    if st.button("Receive"):
+        key = shared_secret % 95
+        decrypted_message = caesar_decrypt(received_message, key)
+        st.success(f"Received message: {decrypted_message}")
 
     st.markdown("![Alt Text](https://tenor.com/view/shaq-shimmy-gif-6579961127426913411.gif)")
 
