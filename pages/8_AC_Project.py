@@ -94,7 +94,7 @@ def main():
         text = st.text_area("Enter text:")
         algorithm = st.selectbox("Select hashing algorithm:", ("SHA-1", "SHA-256", "SHA-3", "MD5"))
         
-        if st.button("Hash"):
+        if st.button("Hash Text"):
             hash_value = hash_data(text.encode(), algorithm)
             st.write(f"{algorithm} hash:", hash_value)
             if algorithm == "SHA-1":
@@ -112,7 +112,7 @@ def main():
             file_contents = file.getvalue()
             algorithm = st.selectbox("Select hashing algorithm:", ("SHA-1", "SHA-256", "SHA-3", "MD5"))
         
-            if st.button("Hash"):
+            if st.button("Hash File"):
                 hash_value = hash_data(file_contents, algorithm)
                 st.write(f"{algorithm} hash:", hash_value)
                 if algorithm == "SHA-1":
