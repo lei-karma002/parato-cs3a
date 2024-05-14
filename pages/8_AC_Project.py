@@ -39,7 +39,7 @@ def encrypt_with_fernet(key, data):
     return encrypted_data
 
 def main():
-    st.title("Hashing and Encryption")
+    st.title("APPLIED CRYPTOGRAPHY")
 
     st.header("Hashing")
 
