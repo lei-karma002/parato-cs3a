@@ -130,10 +130,15 @@ def main():
                 
     st.header("Encryption")
 
-    encryption_input = st.text_input("Enter data to encrypt:")
-
     encryption_option = st.radio("Select encryption method:", ("RSA", "Fernet", "XOR"))
 
+    if encryption_option == "RSA":
+        encryption_input = st.text_input("Enter data to encrypt (RSA):")
+    elif encryption_option == "Fernet":
+        encryption_input = st.text_input("Enter data to encrypt (Fernet):")
+    elif encryption_option == "XOR":
+        encryption_input = st.text_input("Enter data to encrypt (XOR):")
+        
     if st.button("Encrypt"):
         if encryption_option == "RSA":
             public_key = rsa.generate_private_key(
