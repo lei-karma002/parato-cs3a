@@ -198,24 +198,24 @@ def main():
             st.write("Encrypted Data (XOR Cipher):", ciphertext.hex())
             st.write("Decrypted Data (XOR Cipher):", decrypted_data.decode())
             st.success("Data encrypted and decrypted with XOR Cipher successfully!")
-    st.header("Hellman")
-    if encryption_option == "Diffie-Hellman":
-        p = st.number_input("Enter prime number:", min_value=2, step=1, format="%d")
-        g = st.number_input(f"Enter the primitive root of {p}:", min_value=2, step=1, format="%d")
-        private_key = st.number_input("Enter your private key:", min_value=1, step=1, format="%d")
-        received_public_key = st.number_input("Enter received public key:", min_value=1, step=1, format="%d")
 
-        if st.button("Generate Public Key"):
-            if not prime_checker(p):
-                st.error("Number is not prime, please enter a prime number.")
-            elif not primitive_check(g, p):
-                st.error(f"Number is not a primitive root of {p}, please try again!")
-            elif private_key >= p:
-                st.error(f"Private key should be less than {p}, please enter again!")
-            else:
-                public_key, shared_secret = diffie_hellman(p, g, private_key, received_public_key)
-                st.success(f"Your public key: {public_key}")
-                st.success(f"Shared secret: {shared_secret}")
+    st.header("Diffie-Hellman")
+    p = st.number_input("Enter prime number:", min_value=2, step=1, format="%d")
+    g = st.number_input(f"Enter the primitive root of {p}:", min_value=2, step=1, format="%d")
+    private_key = st.number_input("Enter your private key:", min_value=1, step=1, format="%d")
+    received_public_key = st.number_input("Enter received public key:", min_value=1, step=1, format="%d")
+
+    if st.button("Generate Public Key"):
+        if not prime_checker(p):
+            st.error("Number is not prime, please enter a prime number.")
+        elif not primitive_check(g, p):
+            st.error(f"Number is not a primitive root of {p}, please try again!")
+        elif private_key >= p:
+            st.error(f"Private key should be less than {p}, please enter again!")
+        else:
+            public_key, shared_secret = diffie_hellman(p, g, private_key, received_public_key)
+            st.success(f"Your public key: {public_key}")
+            st.success(f"Shared secret: {shared_secret}")
 
     st.markdown("![Alt Text](https://tenor.com/view/shaq-shimmy-gif-6579961127426913411.gif)")
 
