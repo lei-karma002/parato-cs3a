@@ -11,13 +11,13 @@ import os
 
 def hash_data(data, algorithm):
     if algorithm == "SHA-1":
-        hash_value = hashlib.sha1(data.encode()).hexdigest().upper()
+        hash_value = hashlib.sha1(data).hexdigest().upper()
     elif algorithm == "SHA-256":
-        hash_value = hashlib.sha256(data.encode()).hexdigest().upper()
+        hash_value = hashlib.sha256(data).hexdigest().upper()
     elif algorithm == "SHA-3":
-        hash_value = hashlib.sha3_256(data.encode()).hexdigest().upper()
+        hash_value = hashlib.sha3_256(data).hexdigest().upper()
     elif algorithm == "MD5":
-        hash_value = hashlib.md5(data.encode()).hexdigest().upper()
+        hash_value = hashlib.md5(data).hexdigest().upper()
     else:
         return "Invalid algorithm"
     return hash_value
@@ -50,7 +50,7 @@ def main():
         algorithm = st.selectbox("Select hashing algorithm:", ("SHA-1", "SHA-256", "SHA-3", "MD5"))
         
         if st.button("Hash"):
-            hash_value = hash_data(text, algorithm)
+            hash_value = hash_data(text.encode(), algorithm)
             st.write(f"{algorithm} hash:", hash_value)
             if algorithm == "SHA-1":
                 st.success("Text hashed with SHA-1 successfully!")
@@ -58,13 +58,13 @@ def main():
                 st.success("Text hashed with SHA-256 successfully!")
             elif algorithm == "SHA-3":
                 st.success("Text hashed with SHA-3 successfully!")
-            elif algorithm == "SHA-1":
+            elif algorithm == "MD5":
                 st.success("Text hashed with MD5 successfully!")
 
     elif input_type == "File":
         file = st.file_uploader("Upload file:")
         if file is not None:
-            file_contents = file.getvalue().decode("utf-8")
+            file_contents = file.getvalue()
             algorithm = st.selectbox("Select hashing algorithm:", ("SHA-1", "SHA-256", "SHA-3", "MD5"))
         
             if st.button("Hash"):
@@ -76,9 +76,13 @@ def main():
                     st.success("File hashed with SHA-256 successfully!")
                 elif algorithm == "SHA-3":
                     st.success("File hashed with SHA-3 successfully!")
-                elif algorithm == "SHA-1":
+                elif algorithm == "MD5":
                     st.success("File hashed with MD5 successfully!")
-
+                
+                # Add download button
+                hashed_file = BytesIO(hash_value.encode())
+                st.download_button(label="Download Hashed File", data=hashed_file, file_name="hashed_file.txt", mime="text/plain")
+                
     st.header("Encryption")
 
     encryption_option = st.radio("Select encryption method:", ("RSA", "Fernet"))
