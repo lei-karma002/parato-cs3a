@@ -105,7 +105,15 @@ def main():
     encryption_option = st.radio("Select encryption method:", ("RSA", "Fernet", "AES (Block Cipher)", "Caesar Cipher"))
     encryption_input = st.text_input("Enter data to encrypt:")
 
-    if st.button("Encrypt"):
+    if encryption_option == "AES (Block Cipher)":
+        aes_key = st.text_input("Enter AES key (16, 24, or 32 bytes):")
+        if encryption_input and aes_key:
+            if st.button("Encrypt (AES)"):
+                ciphertext_block = encrypt_block_cipher(aes_key.encode(), encryption_input.encode())
+                st.write("Ciphertext (AES):", ciphertext_block.hex())
+        else:
+            st.warning("Please provide AES key and data to encrypt.")
+    elif st.button("Encrypt"):
         if encryption_option == "RSA":
             public_key = rsa.generate_private_key(
                 public_exponent=65537,
@@ -120,13 +128,6 @@ def main():
             encrypted_data = encrypt_with_fernet(key, encryption_input)
             st.write("Encrypted Data (Fernet):", encrypted_data.decode())
             st.success("Data encrypted with Fernet successfully!")
-        elif encryption_option == "AES (Block Cipher)":
-            aes_key = st.text_input("Enter AES key (16, 24, or 32 bytes):")
-            if aes_key:
-                ciphertext_block = encrypt_block_cipher(aes_key.encode(), encryption_input.encode())
-                st.write("Ciphertext (AES):", ciphertext_block.hex())
-            else:
-                st.warning("Please provide AES key.")
         elif encryption_option == "Caesar Cipher":
             caesar_shift = st.number_input("Enter Caesar cipher shift:", min_value=1, max_value=25, value=3)
             if encryption_input:
