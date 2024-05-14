@@ -178,7 +178,10 @@ def main():
         key = st.text_input("Enter XOR Cipher key:")
         block_size = st.number_input("Enter block size:", value=8, step=8, min_value=8, max_value=128)
         ciphertext, decrypted_data, key_bytes = xor_encrypt_and_decrypt(encryption_input, key, block_size)
-    elif encryption_option == "Diffie-Hellman":
+    
+
+    st.header("Hellman")
+    if encryption_option == "Diffie-Hellman":
         p = st.number_input("Enter prime number:", min_value=2, step=1, format="%d")
         g = st.number_input(f"Enter the primitive root of {p}:", min_value=2, step=1, format="%d")
         private_key = st.number_input("Enter your private key:", min_value=1, step=1, format="%d")
