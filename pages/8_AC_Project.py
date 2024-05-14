@@ -84,6 +84,10 @@ def xor_decrypt(ciphertext, key, block_size):
     return unpadded_decrypted_data                               
 
 def main():
+    st.header("We are the Group 8")
+
+def main():
+    
     st.title("APPLIED CRYPTOGRAPHY") #TITLE
 
     st.header("Hashing")
