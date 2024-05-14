@@ -163,8 +163,8 @@ def main():
             st.write("Decrypted Data (XOR Cipher):", decrypted_data.decode())
             st.success("Data encrypted and decrypted with XOR Cipher successfully!")
 
-            """### gif from url"""
-            st.markdown("![Alt Text](https://media.giphy.com/media/vFKqnCdLPNOKc/giphy.gif)")
+    """### gif from url"""
+    st.markdown("![Alt Text](https://media.giphy.com/media/vFKqnCdLPNOKc/giphy.gif)")
 
 if __name__ == "__main__":
     main()
