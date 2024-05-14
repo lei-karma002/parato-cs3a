@@ -162,7 +162,7 @@ def main():
             st.write("Decrypted Data (XOR Cipher):", decrypted_data.decode())
             st.success("Data encrypted and decrypted with XOR successfully!")
 
-    st.markdown("![Error](https://media.giphy.com/media/vFKqnCdLPNOKc/giphy.gif)")
+    st.markdown("![Error](https://tenor.com/view/hi-gif-14667427173248443855.gif)")
 
 if __name__ == "__main__":
     main()
