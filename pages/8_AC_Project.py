@@ -213,11 +213,11 @@ def main():
             st.error(f"Number is not a primitive root of {p}, please try again!")
         elif private_key >= p:
             st.error(f"Private key should be less than {p}, please enter again!")
-        
-        public_key, shared_secret = diffie_hellman(p, g, private_key, received_public_key)
-        st.success(f"Your public key: {public_key}")
-        st.success(f"Shared secret: {shared_secret}")
-        
+        else:
+            public_key, shared_secret = diffie_hellman(p, g, private_key, received_public_key)
+            st.success(f"Your public key: {public_key}")
+            st.success(f"Shared secret: {shared_secret}")
+
     message = st.text_input("Type your message:")
     if st.button("Send"):
         key = shared_secret % 95
