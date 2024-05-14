@@ -160,7 +160,7 @@ def main():
         elif encryption_option == "XOR Cipher":
             st.write("Encrypted Data (XOR Cipher):", ciphertext.hex())
             st.write("Decrypted Data (XOR Cipher):", decrypted_data.decode())
-            st.success("Data encrypted and decrypted with XOR successfully!")
+            st.success("Data encrypted and decrypted with XOR Cipher successfully!")
 
 if __name__ == "__main__":
     main()
