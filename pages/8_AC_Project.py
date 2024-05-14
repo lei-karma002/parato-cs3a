@@ -130,11 +130,12 @@ def main():
                 
     st.header("Encryption")
 
+    encryption_input = st.text_input("Enter data to encrypt:")
+
     encryption_option = st.radio("Select encryption method:", ("RSA", "Fernet", "XOR"))
 
     if st.button("Encrypt"):
         if encryption_option == "RSA":
-            encryption_input = st.text_input("Enter data to encrypt:")
             public_key = rsa.generate_private_key(
                 public_exponent=65537,
                 key_size=2048,
@@ -144,13 +145,11 @@ def main():
             st.write("Encrypted Data (RSA):", encrypted_data.hex())
             st.success("Data encrypted with RSA successfully!")
         elif encryption_option == "Fernet":
-            encryption_input = st.text_input("Enter data to encrypt:")
             key = Fernet.generate_key()
             encrypted_data = encrypt_with_fernet(key, encryption_input)
             st.write("Encrypted Data (Fernet):", encrypted_data.decode())
             st.success("Data encrypted with Fernet successfully!")
         elif encryption_option == "XOR":
-            encryption_input = st.text_input("Enter data to encrypt:")
             key = st.text_input("Enter XOR key:")
             block_size = st.number_input("Enter block size:", value=8, step=8, min_value=8, max_value=128)
             ciphertext, decrypted_data, key_bytes = xor_encrypt_and_decrypt(encryption_input, key, block_size)
