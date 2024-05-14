@@ -1,5 +1,4 @@
 import streamlit as st
-import base64
 import hashlib
 from io import BytesIO
 from cryptography.hazmat.backends import default_backend
@@ -85,7 +84,7 @@ def xor_decrypt(ciphertext, key, block_size):
     return unpadded_decrypted_data                               
 
 def main():
-    st.title("APPLIED CRYPTOGRAPHY") #TITLE
+    st.title("APPLIED CRYPTOGRAPHY")
 
     st.header("Hashing")
 
@@ -161,10 +160,9 @@ def main():
         elif encryption_option == "XOR Cipher":
             st.write("Encrypted Data (XOR Cipher):", ciphertext.hex())
             st.write("Decrypted Data (XOR Cipher):", decrypted_data.decode())
-            st.success("Data encrypted and decrypted with XOR Cipher successfully!")
+            st.success("Data encrypted and decrypted with XOR successfully!")
 
-    """### gif from url"""
-    st.markdown("![Alt Text](https://media.giphy.com/media/vFKqnCdLPNOKc/giphy.gif)")
+    st.markdown("![Error](https://media.giphy.com/media/vFKqnCdLPNOKc/giphy.gif)")
 
 if __name__ == "__main__":
     main()
