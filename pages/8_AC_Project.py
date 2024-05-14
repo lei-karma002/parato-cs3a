@@ -84,7 +84,7 @@ def xor_decrypt(ciphertext, key, block_size):
     return unpadded_decrypted_data                               
 
 def main():
-    st.title("APPLIED CRYPTOGRAPHY")
+    st.title("APPLIED CRYPTOGRAPHY") #TITLE
 
     st.header("Hashing")
 
