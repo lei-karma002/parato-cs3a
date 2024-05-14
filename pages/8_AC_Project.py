@@ -5,6 +5,7 @@ from cryptography.hazmat.primitives import serialization
 from cryptography.hazmat.primitives.asymmetric import rsa
 from cryptography.fernet import Fernet
 
+
 # Function to encrypt text using symmetric encryption
 def encrypt_text_symmetric(text, key):
     cipher_suite = Fernet(key)
