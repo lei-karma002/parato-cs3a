@@ -9,7 +9,6 @@ from cryptography.hazmat.primitives.asymmetric import rsa
 from cryptography.fernet import Fernet
 import os
 
-@st.cache
 def hash_data(data, algorithm):
     if algorithm == "SHA-1":
         hash_value = hashlib.sha1(data).hexdigest().upper()
@@ -23,7 +22,6 @@ def hash_data(data, algorithm):
         return "Invalid algorithm"
     return hash_value
 
-@st.cache
 def encrypt_with_rsa(public_key, data):
     encrypted_data = public_key.encrypt(
         data.encode(),
@@ -35,31 +33,26 @@ def encrypt_with_rsa(public_key, data):
     )
     return encrypted_data
 
-@st.cache
 def encrypt_with_fernet(key, data):
     f = Fernet(key)
     encrypted_data = f.encrypt(data.encode())
     return encrypted_data
 
-@st.cache
 def xor_encrypt_block(plaintext_block, key):
     encrypted_block = b''
     for i in range(len(plaintext_block)):
         encrypted_block += bytes([plaintext_block[i] ^ key[i % len(key)]])
     return encrypted_block                   
 
-@st.cache
 def xor_decrypt_block(ciphertext_block, key):
     return xor_encrypt_block(ciphertext_block, key)  
 
-@st.cache
 def xor_encrypt_and_decrypt(plaintext, key, block_size):
     key_bytes = pad(bytes(key.encode()), block_size)
     ciphertext = xor_encrypt(plaintext.encode(), key_bytes, block_size)
     decrypted_data = xor_decrypt(ciphertext, key_bytes, block_size)
     return ciphertext, decrypted_data, key_bytes
 
-@st.cache
 def xor_encrypt(plaintext, key, block_size):
     encrypted_data = b''
     padded_plaintext = pad(plaintext, block_size)
@@ -69,7 +62,6 @@ def xor_encrypt(plaintext, key, block_size):
         encrypted_data += encrypted_block
     return encrypted_data                          
 
-@st.cache
 def xor_decrypt(ciphertext, key, block_size):
     decrypted_data = b''
     for l, i in enumerate(range(0, len(ciphertext), block_size)):
@@ -79,7 +71,6 @@ def xor_decrypt(ciphertext, key, block_size):
     unpadded_decrypted_data = unpad(decrypted_data)
     return unpadded_decrypted_data                               
 
-@st.cache
 def prime_checker(p):
     if p < 2:
         return False
@@ -92,25 +83,26 @@ def prime_checker(p):
             return False
     return True
 
-@st.cache
 def primitive_check(g, p):
     required_set = set(num for num in range(1, p) if gcd(num, p) == 1)
     actual_set = set(pow(g, powers, p) for powers in range(1, p))
     return required_set == actual_set
 
-@st.cache
+def gcd(a, b):
+    while b:
+        a, b = b, a % b
+    return a
+
 def diffie_hellman(p, g, private_key, received_public_key):
     public_key = pow(g, private_key, p)
     shared_secret = pow(received_public_key, private_key, p)
     shared_key = hashlib.sha256(str(shared_secret).encode()).digest()
     return public_key, shared_secret
 
-@st.cache
 def caesar_encrypt(message, key):
     encrypted = ''.join(chr((ord(char) + key - 32) % 95 + 32) for char in message)
     return encrypted
 
-@st.cache
 def caesar_decrypt(message, key):
     decrypted = ''.join(chr((ord(char) - key - 32) % 95 + 32) for char in message)
     return decrypted
@@ -278,21 +270,26 @@ def main():
             st.error(f"Private key should be less than {p}, please enter again!")
         else:
             public_key, shared_secret = diffie_hellman(p, g, private_key, received_public_key)
+            st.session_state["public_key"] = public_key
+            st.session_state["shared_secret"] = shared_secret
             st.success(f"Your public key: {public_key}")
             st.success(f"Shared secret: {shared_secret}")
 
-            message = st.text_input("Type your message:")
-            if st.button("Send"):
-                key = shared_secret % 95
-                encrypted_message = caesar_encrypt(message, key)
-                st.success(f"You Sent: {encrypted_message}")
+    if "public_key" in st.session_state and "shared_secret" in st.session_state:
+        public_key = st.session_state["public_key"]
+        shared_secret = st.session_state["shared_secret"]
 
-            received_message = st.text_input("Enter received message:")
-            if st.button("Receive"):
-                key = shared_secret % 95
-                decrypted_message = caesar_decrypt(received_message, key)
-                st.success(f"Received message: {decrypted_message}")
+        message = st.text_input("Type your message:")
+        if st.button("Send"):
+            key = shared_secret % 95
+            encrypted_message = caesar_encrypt(message, key)
+            st.success(f"You Sent: {encrypted_message}")
 
+        received_message = st.text_input("Enter received message:")
+        if st.button("Receive"):
+            key = shared_secret % 95
+            decrypted_message = caesar_decrypt(received_message, key)
+            st.success(f"Received message: {decrypted_message}")
 
     st.markdown("![Alt Text](https://tenor.com/view/shaq-shimmy-gif-6579961127426913411.gif)")
 
