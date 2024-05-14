@@ -167,7 +167,7 @@ def main():
                 
     st.header("Encryption")
 
-    encryption_option = st.radio("Select encryption method:", ("RSA", "Fernet", "XOR Cipher", "Diffie-Hellman"))
+    encryption_option = st.radio("Select encryption method:", ("RSA", "Fernet", "XOR Cipher"))
 
     if encryption_option == "RSA":
         encryption_input = st.text_input("Enter data to encrypt (RSA):")
