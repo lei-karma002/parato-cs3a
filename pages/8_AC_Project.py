@@ -295,6 +295,11 @@ def main():
 
 st.markdown("![Alt Text](https://tenor.com/view/hi-gif-14667427173248443855.gif)")
 """### We are the Group 8"""
+"""### Lei Parato"""
+"""### Gracia Torallo"""
+"""### Gerald Carique"""
+
+
 
 if __name__ == "__main__":
     main()
