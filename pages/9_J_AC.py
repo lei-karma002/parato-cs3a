@@ -447,5 +447,5 @@ def main():
             else:
                 st.warning("Please upload a file to hash.")
 
-if _name_ == "_main_":
+if __name__ == "__main__":
     main()
