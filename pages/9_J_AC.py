@@ -274,21 +274,6 @@ def main():
                             st.error(f"Encryption failed: {e}")
                     else:
                         st.warning("Please provide both public key and text to encrypt.")
-
-            elif action == "File":
-                file = st.file_uploader("Choose a file to encrypt", type=None)
-                if st.button("Encrypt"):
-                    if key and file:
-                        try:
-                            key_bytes = base64.b64decode(key)
-                            file_data = file.read()
-                            encrypted_file = encrypt_file_aes(file_data, key_bytes)
-                            encrypted_file_name = f"encrypted_{file.name}"
-                            st.download_button("Download Encrypted File", data=encrypted_file, file_name=encrypted_file_name)
-                        except Exception as e:
-                            st.error(f"File encryption failed: {e}")
-                    else:
-                        st.warning("Please provide both key and file to encrypt.")
     
     elif operation == "Decrypt":
         decryption_type = st.selectbox("Select Decryption Algorithm", ["Symmetric (Fernet)", "Symmetric (AES)", "Asymmetric (RSA)"])
@@ -368,21 +353,6 @@ def main():
                             st.error(f"Decryption failed: {e}")
                     else:
                         st.warning("Please provide both private key and encrypted text to decrypt.")
-
-            elif action == "File":
-                file = st.file_uploader("Choose a file to decrypt", type=None)
-                if st.button("Decrypt"):
-                    if key and file:
-                        try:
-                            key_bytes = base64.b64decode(key)
-                            encrypted_file = file.read()
-                            decrypted_file = decrypt_file_aes(encrypted_file, key_bytes)
-                            decrypted_file_name = f"decrypted_{file.name}"
-                            st.download_button("Download Decrypted File", data=decrypted_file, file_name=decrypted_file_name)
-                        except Exception as e:
-                            st.error(f"File decryption failed: {e}")
-                    else:
-                        st.warning("Please provide both key and file to decrypt.")
     
     elif operation == "Generate Keys":
         key_type = st.selectbox("Select Key Type", ["RSA", "AES", "Fernet"])
