@@ -65,6 +65,17 @@ def decrypt_text_rsa(encrypted_text, private_key):
         )
     )
     return decrypted_text
+def decrypt_file_rsa(encrypted_text, private_key):
+    private_key = serialization.load_pem_private_key(private_key, password=None, backend=default_backend())
+    decrypted_text = private_key.decrypt(
+        encrypted_text,
+        padding.OAEP(
+            mgf=padding.MGF1(algorithm=hashes.SHA256()),
+            algorithm=hashes.SHA256(),
+            label=None
+        )
+    )
+    return decrypted_text
 
 # Function to generate Fernet key
 def generate_fernet_key():
