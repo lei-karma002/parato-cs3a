@@ -66,6 +66,33 @@ def decrypt_text_rsa(encrypted_text, private_key):
     )
     return decrypted_text
 
+# Function to encrypt file using RSA
+def encrypt_file_rsa(file_data, public_key):
+    public_key = serialization.load_pem_public_key(public_key, backend=default_backend())
+    encrypted_file = public_key.encrypt(
+        file_data,
+        padding.OAEP(
+            mgf=padding.MGF1(algorithm=hashes.SHA256()),
+            algorithm=hashes.SHA256(),
+            label=None
+        )
+    )
+    return encrypted_file
+
+# Function to decrypt file using RSA
+def decrypt_file_rsa(encrypted_file, private_key):
+    private_key = serialization.load_pem_private_key(private_key, password=None, backend=default_backend())
+    decrypted_file = private_key.decrypt(
+        encrypted_file,
+        padding.OAEP(
+            mgf=padding.MGF1(algorithm=hashes.SHA256()),
+            algorithm=hashes.SHA256(),
+            label=None
+        )
+    )
+    return decrypted_file
+
+
 # Function to generate Fernet key
 def generate_fernet_key():
     return Fernet.generate_key()
@@ -274,6 +301,26 @@ def main():
                             st.error(f"Encryption failed: {e}")
                     else:
                         st.warning("Please provide both public key and text to encrypt.")
+            elif encryption_type == "Asymmetric (RSA)":
+                if st.checkbox("Generate RSA Keys"):
+                    private_key, public_key = generate_rsa_keys()
+                    st.text_area("Generated RSA Public Key:", public_key.decode('utf-8'))
+                    st.text_area("Generated RSA Private Key:", private_key.decode('utf-8'))
+                
+                # New RSA file encryption section
+                if action == "File":
+                    file = st.file_uploader("Choose a file to encrypt", type=None)
+                    if st.button("Encrypt"):
+                        if public_key and file:
+                            try:
+                                file_data = file.read()
+                                encrypted_file = encrypt_file_rsa(file_data, public_key)
+                                encrypted_file_name = f"encrypted_{file.name}"
+                                st.download_button("Download Encrypted File", data=encrypted_file, file_name=encrypted_file_name)
+                            except Exception as e:
+                                st.error(f"File encryption failed: {e}")
+                        else:
+                            st.warning("Please provide both public key and file to encrypt.")
     
     elif operation == "Decrypt":
         decryption_type = st.selectbox("Select Decryption Algorithm", ["Symmetric (Fernet)", "Symmetric (AES)", "Asymmetric (RSA)"])
@@ -353,6 +400,23 @@ def main():
                             st.error(f"Decryption failed: {e}")
                     else:
                         st.warning("Please provide both private key and encrypted text to decrypt.")
+            elif decryption_type == "Asymmetric (RSA)":
+                private_key = st.text_area("Enter RSA Private Key:")
+                
+                # New RSA file decryption section
+                if action == "File":
+                    file = st.file_uploader("Choose a file to decrypt", type=None)
+                    if st.button("Decrypt"):
+                        if private_key and file:
+                            try:
+                                encrypted_file = file.read()
+                                decrypted_file = decrypt_file_rsa(encrypted_file, private_key)
+                                decrypted_file_name = f"decrypted_{file.name}"
+                                st.download_button("Download Decrypted File", data=decrypted_file, file_name=decrypted_file_name)
+                            except Exception as e:
+                                st.error(f"File decryption failed: {e}")
+                        else:
+                            st.warning("Please provide both private key and file to decrypt.")
     
     elif operation == "Generate Keys":
         key_type = st.selectbox("Select Key Type", ["RSA", "AES", "Fernet"])
