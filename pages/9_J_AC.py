@@ -164,25 +164,14 @@ def main():
                         st.warning("Please provide both key and file to encrypt.")
 
         elif encryption_type == "Asymmetric (RSA)":
-            if 'rsa_keys_generated' not in st.session_state:
-                st.session_state.rsa_keys_generated = False
-
-            if st.button("Generate/Remove RSA Key Pair"):
-                if st.session_state.rsa_keys_generated:
-                    st.session_state.rsa_keys_generated = False
-                    st.session_state.private_key = ""
-                    st.session_state.public_key = ""
-                else:
-                    private_key, public_key = generate_rsa_keys()
-                    st.session_state.private_key = private_key.decode('utf-8')
-                    st.session_state.public_key = public_key.decode('utf-8')
-                    st.session_state.rsa_keys_generated = True
-
-            if st.session_state.rsa_keys_generated:
+            if st.checkbox("Generate RSA Key Pair"):
+                private_key, public_key = generate_rsa_keys()
+                st.session_state.private_key = private_key.decode('utf-8')
+                st.session_state.public_key = public_key.decode('utf-8')
                 st.text_area("Generated RSA Private Key:", st.session_state.private_key)
                 st.text_area("Generated RSA Public Key:", st.session_state.public_key)
-
-            public_key = st.text_area("Enter RSA Public Key:", st.session_state.public_key)
+            else:
+                public_key = st.text_area("Enter RSA Public Key:", st.session_state.get('public_key', ''))
 
             if action == "Text":
                 text = st.text_area("Enter Text to Encrypt:")
@@ -314,23 +303,11 @@ def main():
             st.text_area("Generated AES Key (base64 encoded):", key)
 
         elif key_type == "RSA":
-            if 'rsa_keys_generated' not in st.session_state:
-                st.session_state.rsa_keys_generated = False
-
-            if st.button("Generate/Remove RSA Key Pair"):
-                if st.session_state.rsa_keys_generated:
-                    st.session_state.rsa_keys_generated = False
-                    st.session_state.private_key = ""
-                    st.session_state.public_key = ""
-                else:
-                    private_key, public_key = generate_rsa_keys()
-                    st.session_state.private_key = private_key.decode('utf-8')
-                    st.session_state.public_key = public_key.decode('utf-8')
-                    st.session_state.rsa_keys_generated = True
-
-            if st.session_state.rsa_keys_generated:
-                st.text_area("Generated RSA Private Key:", st.session_state.private_key)
-                st.text_area("Generated RSA Public Key:", st.session_state.public_key)
+            private_key, public_key = generate_rsa_keys()
+            st.session_state.private_key = private_key.decode('utf-8')
+            st.session_state.public_key = public_key.decode('utf-8')
+            st.text_area("Generated RSA Private Key:", st.session_state.private_key)
+            st.text_area("Generated RSA Public Key:", st.session_state.public_key)
 
     elif operation == "Hash Text":
         text = st.text_area("Enter Text to Hash:")
