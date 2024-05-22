@@ -71,12 +71,29 @@ def decrypt_text_rsa(encrypted_text, private_key):
 def encrypt_file_rsa(file_data, public_key):
     rsa_key = RSA.import_key(public_key)
     cipher = PKCS1_OAEP.new(rsa_key)
-    return cipher.encrypt(file_data)
+
+    # Chunk size for file encryption
+    chunk_size = 256
+
+    encrypted_chunks = []
+    for i in range(0, len(file_data), chunk_size):
+        chunk = file_data[i:i + chunk_size]
+        encrypted_chunk = cipher.encrypt(chunk)
+        encrypted_chunks.append(encrypted_chunk)
+
+    return b''.join(encrypted_chunks)
 
 def decrypt_file_rsa(encrypted_file_data, private_key):
     rsa_key = RSA.import_key(private_key)
     cipher = PKCS1_OAEP.new(rsa_key)
-    return cipher.decrypt(encrypted_file_data)
+
+    decrypted_chunks = []
+    for i in range(0, len(encrypted_file_data), 256):
+        encrypted_chunk = encrypted_file_data[i:i + 256]
+        decrypted_chunk = cipher.decrypt(encrypted_chunk)
+        decrypted_chunks.append(decrypted_chunk)
+
+    return b''.join(decrypted_chunks)
 
 # Hashing
 def generate_hash(text):
