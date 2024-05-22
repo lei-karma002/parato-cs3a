@@ -181,14 +181,14 @@ def main():
                         st.warning("Please provide both key and file to encrypt.")
 
         elif encryption_type == "Asymmetric (RSA)":
-            public_key = st.text_area("Enter RSA Public Key:", st.session_state.get('public_key', ''))
             if st.checkbox("Generate RSA Key Pair"):
                 private_key, public_key = generate_rsa_keys()
                 st.session_state.private_key = private_key.decode('utf-8')
                 st.session_state.public_key = public_key.decode('utf-8')
                 st.text_area("Generated RSA Private Key:", st.session_state.private_key)
-                st.text_area("Generated RSA Public Key:", st.session_state.public_key)              
-
+                st.text_area("Generated RSA Public Key:", st.session_state.public_key) 
+                             
+            public_key = st.text_area("Enter RSA Public Key:", st.session_state.get('public_key', ''))
             if action == "Text":
                 text = st.text_area("Enter Text to Encrypt:")
                 if st.button("Encrypt"):
